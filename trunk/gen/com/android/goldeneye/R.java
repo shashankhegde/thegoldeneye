@@ -22,8 +22,9 @@ public final class R {
         public static final int tvInfo=0x7f060005;
     }
     public static final class layout {
-        public static final int main_goldeneye_facerecognizer=0x7f030000;
-        public static final int main_goldeneye_tmp=0x7f030001;
+        public static final int main=0x7f030000;
+        public static final int main_goldeneye_facerecognizer=0x7f030001;
+        public static final int main_goldeneye_tmp=0x7f030002;
     }
     public static final class raw {
         public static final int haarclassifier=0x7f040000;

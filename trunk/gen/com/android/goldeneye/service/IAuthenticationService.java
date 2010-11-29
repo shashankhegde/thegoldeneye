@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/shashank/workspace/android/GoldenEye/src/com/android/goldeneye/service/IAuthenticationService.aidl
+ * Original file: /home/shashank/programming/opencv/android/thegoldeneye/src/com/android/goldeneye/service/IAuthenticationService.aidl
  */
 package com.android.goldeneye.service;
 public interface IAuthenticationService extends android.os.IInterface

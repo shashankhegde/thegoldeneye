@@ -17,10 +17,11 @@
             </intent-filter>
         </activity>
 
+    <service android:name=".service.AuthenticationService" android:exported="true" android:enabled="true">
+    </service>
+
     </application>
 
-    <service android:name=".AuthenticationService" android:exported="true">
-    </service>
 
 
 </manifest> 

@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/shashank/workspace/android/GoldenEye/src/com/android/goldeneye/service/IAuthenticationCallback.aidl
+ * Original file: /home/shashank/programming/opencv/android/thegoldeneye/src/com/android/goldeneye/service/IAuthenticationCallback.aidl
  */
 package com.android.goldeneye.service;
 /*
