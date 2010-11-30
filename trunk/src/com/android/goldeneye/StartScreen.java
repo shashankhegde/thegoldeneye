@@ -28,7 +28,11 @@ import java.util.Vector;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -41,7 +45,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -52,6 +58,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.android.goldeneye.core.GoldenEye;
+import com.android.goldeneye.service.IAuthenticationService;
+
 
 // ----------------------------------------------------------------------
 
@@ -234,12 +242,16 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 		mHolder = iSurfaceView.getHolder();
 		mHolder.addCallback(this);
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		StartService();
+		DoBindService();
 
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		UnbindService();
 
 		File localHaarXmlFile = new File(
 				GoldenEyeConstants.LOCAL_HAAR_CLASSIFIER_XML);
@@ -392,7 +404,7 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 			imageView.setVisibility(View.VISIBLE);
 			btnSnap.setText("Snap Again ?");
 			showDialog(GoldenEyeConstants.SHOW_NAME_DIALOG);
-			
+			iAuthServiceConnection.SendAuthenticationResult(personName);		
 		}
 	};
 
@@ -531,4 +543,81 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 		}
 	}
 
+	private Handler serviceHandler;
+	private boolean iServiceStarted = false;
+	private boolean iServiceBound = false;
+	private AuthServiceConnection iAuthServiceConnection = null;
+	private IAuthenticationService iAuthService = null;
+	
+	protected int StartService() {
+		Intent i = new Intent();
+		i.setClassName("com.android.goldeneye", "com.android.goldeneye.service.AuthenticationService");
+		
+		ComponentName s = startService(i);
+		if(s != null)
+			iServiceStarted = true;
+		
+		if(!iServiceStarted)
+			return -1;
+		
+		return 0;
+	}
+	
+	protected int StopService() {
+		return 0;
+	}
+	
+	protected int DoBindService() {
+		Intent i = new Intent();
+		i.setClassName("com.android.goldeneye", "com.android.goldeneye.service.AuthenticationService");
+		
+		iAuthServiceConnection = new AuthServiceConnection();
+		
+		iServiceBound = bindService(i,(ServiceConnection)iAuthServiceConnection,Context.BIND_AUTO_CREATE);
+		if(!iServiceBound) {
+			Log.i("AuthServiceConnection", "Error binding to the service");
+			return -1;
+		}
+		
+		Log.i("AuthServiceConnection", "Bound to the service!");
+	
+		return 0;
+	}
+
+	protected int UnbindService() {
+		unbindService(iAuthServiceConnection);
+		return 0;
+	}
+
+	class AuthServiceConnection implements ServiceConnection {
+
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			// We are now connected to the service
+			iAuthService = IAuthenticationService.Stub.asInterface(service);
+			Log.i("AuthServiceConnection", "onServiceConnected()");
+		}
+
+		public void onServiceDisconnected(ComponentName name) {
+			// Disconnected form the service
+			iAuthService = null;
+			Log.i("AuthServiceConnection", "onServiceDisconnected()");
+		}
+		
+		public void SendAuthenticationResult(String aUserName) {
+			
+			Log.i("AuthServiceConnection", "SendAuthenticationResult()");
+
+			// continue with authentication
+			if(iAuthService != null) {
+				try {
+					iAuthService.setAuthenticationResult(aUserName);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	
 }

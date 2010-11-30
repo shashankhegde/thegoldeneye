@@ -7,5 +7,5 @@ interface IAuthenticationService {
     int startAuthentication(String aUserName);
     int setOnAuthentication(IAuthenticationCallback aOnAuthenticationComplete);
     
-    int setAuthenticationResult(boolean aAuthenticationResult);
+    int setAuthenticationResult(String aUserName);
 }

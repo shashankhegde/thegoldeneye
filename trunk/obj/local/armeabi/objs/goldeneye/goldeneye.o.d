@@ -1,6 +1,6 @@
-/home/shashank/programming/opencv/android/GoldenEye/obj/local/armeabi/objs/goldeneye/goldeneye.o: \
- /home/shashank/programming/opencv/android/GoldenEye/jni/goldeneye.cpp \
- /home/shashank/programming/opencv/android/GoldenEye/jni/goldeneye.h \
+/home/shashank/programming/opencv/android/thegoldeneye/obj/local/armeabi/objs/goldeneye/goldeneye.o: \
+ /home/shashank/programming/opencv/android/thegoldeneye/jni/goldeneye.cpp \
+ /home/shashank/programming/opencv/android/thegoldeneye/jni/goldeneye.h \
  /home/shashank/programming/opencv/android/../include/opencv/cv.h \
  /home/shashank/programming/opencv/android/../modules/core/include/opencv2/core/core_c.h \
  /home/shashank/programming/opencv/android/../modules/core/include/opencv2/core/types_c.h \
@@ -66,7 +66,7 @@
  /home/shashank/android-ndk-r4-crystax/build/platforms/android-5/arch-arm/usr/include/sys/endian.h \
  /home/shashank/android-ndk-r4-crystax/build/platforms/android-5/arch-arm/usr/include/dirent.h
 
-/home/shashank/programming/opencv/android/GoldenEye/jni/goldeneye.h:
+/home/shashank/programming/opencv/android/thegoldeneye/jni/goldeneye.h:
 
 /home/shashank/programming/opencv/android/../include/opencv/cv.h:
 
