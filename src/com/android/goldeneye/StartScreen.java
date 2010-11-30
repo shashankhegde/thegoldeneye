@@ -82,6 +82,77 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 	private NameInputDialogListener nameInputListener;
 	private transient String personName;
 
+	private ImageCapturer iImageCapturer = null;
+	
+	private class ImageCapturer {
+		private int iTrainingImages;
+		private int iCurrentPictureCount;
+		
+		public ImageCapturer() {
+			iTrainingImages = 0;
+			iCurrentPictureCount = 0;
+		}
+
+		private Handler iTrainer = new Handler() {
+			
+			public void handleMessage(Message aMessage) {
+				// using this only to take pictures
+				DoTakeSinglePicture(trainCallBack);
+			}
+			
+		};
+		
+		public void TrainingImageCaptured() {
+			if(iCurrentPictureCount < iTrainingImages) {
+				iCurrentPictureCount++;
+				if(iCurrentPictureCount == iTrainingImages) {
+					trainCallBack.moveToTrainPhase();
+				}
+				trainCallBack.setSnapCount(iCurrentPictureCount);
+				iTrainer.sendEmptyMessage(0);
+			}
+		}
+		
+		public void StartTraining(int aSnapCount) {
+			Delay(5);
+			iCurrentPictureCount = 1;
+			iTrainingImages = aSnapCount;
+			trainCallBack.setSnapCount(iCurrentPictureCount);
+			if (iCurrentPictureCount == aSnapCount) {
+				trainCallBack.moveToTrainPhase();
+			}
+			iTrainer.sendEmptyMessage(0);
+			//mCamera.takePicture(null, null, null, trainCallBack);
+		}
+
+		private void Delay(int aDelayTime) {
+			for (int j = aDelayTime; j >= 0; j--) {
+				try {
+					Thread.sleep(1000);
+					btnTrain.setText(String.valueOf(j));
+				} catch (InterruptedException e) {
+					Log.i(GoldenEyeConstants.LOG_TAG,
+							"InterruptedException in doInBackground - TrainTimerTask");
+					e.printStackTrace();
+					return;
+				}
+
+				btnTrain.setText("...");
+			}
+		}
+		
+		public void TakeSinglePicture() {
+			Delay(5);
+			DoTakeSinglePicture(snapCallback);
+			//mCamera.takePicture(null, null, null, snapCallback);
+		}
+
+		private void DoTakeSinglePicture(Camera.PictureCallback aCallback) {
+			mCamera.takePicture(null, null, null, aCallback);
+		}
+		
+	}
+	
 	private class TrainTimerTask extends AsyncTask<Integer, Integer, Boolean> {
 		protected Boolean doInBackground(Integer... params) {
 			int actionType = params[0];
@@ -340,6 +411,9 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 
 	public void onClick(View v) {
 
+		if(iImageCapturer == null) {
+			iImageCapturer = new ImageCapturer();
+		}
 		if (v.getId() == R.id.btnSnap) {
 
 			btnSnap.setText("Snap");
@@ -347,13 +421,15 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 			iSurfaceView.setVisibility(View.VISIBLE);
 			imageView.setVisibility(View.INVISIBLE);
 			mCamera.startPreview();
-			new TrainTimerTask().execute(GoldenEyeConstants.SNAP_SELECT, 5);
+			iImageCapturer.TakeSinglePicture();
+			//new TrainTimerTask().execute(GoldenEyeConstants.SNAP_SELECT, 5);
 
 		} else if (v.getId() == R.id.btnTrain) {
 			iSurfaceView.setVisibility(View.VISIBLE);
 			imageView.setVisibility(View.INVISIBLE);
 			Log.i(GoldenEyeConstants.LOG_TAG, "train timer started");
-			new TrainTimerTask().execute(GoldenEyeConstants.TRAIN_SELECT, 5, 5);
+			iImageCapturer.StartTraining(5);
+			//new TrainTimerTask().execute(GoldenEyeConstants.TRAIN_SELECT, 5, 5);
 		}
 
 	}
@@ -449,6 +525,7 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 
 			String fileName = String.format(TRAIN_FILE_PREFIX + ""
 					+ getSnapCount() + ".jpg", System.currentTimeMillis());
+			Log.i("FileName", fileName);
 			new File(fileName).delete();
 			FileOutputStream outStream = null;
 			try {
@@ -470,6 +547,8 @@ public class StartScreen extends Activity implements SurfaceHolder.Callback,
 			} else {
 				mCamera.startPreview();
 			}
+			
+			iImageCapturer.TrainingImageCaptured();
 		}
 
 	}
