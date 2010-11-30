@@ -6,7 +6,7 @@ package com.android.goldeneye.service;
 oneway interface IAuthenticationCallback {
 
     /*
-     * aAuthenticationResult = true, if aUserName is authenticated
+     * aUserName: Name of the user recognized. If not recognized, aUserName = "" 
      */
-    void onAuthenticationComplete(String aUserName, boolean aAuthenticationResult);
+    void onAuthenticationComplete(String aUserName);
 }

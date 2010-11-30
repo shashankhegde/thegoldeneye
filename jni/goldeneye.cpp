@@ -225,6 +225,18 @@ int GoldenEye::copyFile(const string& src, const string& target) {
 	// Get the detected face image.
 	// Make sure the image is the same dimensions as the training images.
 	IplImage* sizedImg = resizeImage(croppedImage, resizeWidth, resizeHeight);
+
+	struct stat statInfo;
+	if (stat(target.c_str(), &statInfo) == 0) {
+		oss.str("");
+		oss<<"Removing existing file : "<<target.c_str();
+		__android_log_write(ANDROID_LOG_INFO, "NativeCode", oss.str().c_str());
+		if(remove(target.c_str())!=0){
+			oss.str("");
+			oss<<"Attempting to overwrite as file couldn't be removed : "<<target.c_str();
+			__android_log_write(ANDROID_LOG_ERROR, "NativeCode", oss.str().c_str());
+		}
+	}
 	cvSaveImage(target.c_str(), sizedImg);
 
 	cvReleaseImage(&pInpImage);

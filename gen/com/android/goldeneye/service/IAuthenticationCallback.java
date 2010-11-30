@@ -50,9 +50,7 @@ case TRANSACTION_onAuthenticationComplete:
 data.enforceInterface(DESCRIPTOR);
 java.lang.String _arg0;
 _arg0 = data.readString();
-boolean _arg1;
-_arg1 = (0!=data.readInt());
-this.onAuthenticationComplete(_arg0, _arg1);
+this.onAuthenticationComplete(_arg0);
 return true;
 }
 }
@@ -74,15 +72,14 @@ public java.lang.String getInterfaceDescriptor()
 return DESCRIPTOR;
 }
 /*
-     * aAuthenticationResult = true, if aUserName is authenticated
+     * aUserName: Name of the user recognized. If not recognized, aUserName = "" 
      */
-public void onAuthenticationComplete(java.lang.String aUserName, boolean aAuthenticationResult) throws android.os.RemoteException
+public void onAuthenticationComplete(java.lang.String aUserName) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 try {
 _data.writeInterfaceToken(DESCRIPTOR);
 _data.writeString(aUserName);
-_data.writeInt(((aAuthenticationResult)?(1):(0)));
 mRemote.transact(Stub.TRANSACTION_onAuthenticationComplete, _data, null, android.os.IBinder.FLAG_ONEWAY);
 }
 finally {
@@ -93,7 +90,7 @@ _data.recycle();
 static final int TRANSACTION_onAuthenticationComplete = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
 }
 /*
-     * aAuthenticationResult = true, if aUserName is authenticated
+     * aUserName: Name of the user recognized. If not recognized, aUserName = "" 
      */
-public void onAuthenticationComplete(java.lang.String aUserName, boolean aAuthenticationResult) throws android.os.RemoteException;
+public void onAuthenticationComplete(java.lang.String aUserName) throws android.os.RemoteException;
 }

@@ -54,11 +54,11 @@ public class AuthenticationService extends Service {
 	    	return 0;
 	    }
 
-		public int setAuthenticationResult(boolean aAuthenticationResult)
+		public int setAuthenticationResult(String aUserName)
 				throws RemoteException {
 			// TODO Auto-generated method stub
 			Log.i("AuthenticationResult", "SetOnAuthenticationResult");
-			iOnAuthenticationComplete.onAuthenticationComplete("user", aAuthenticationResult);
+			iOnAuthenticationComplete.onAuthenticationComplete(aUserName);
 			return 0;
 		}
 
@@ -99,7 +99,7 @@ public class AuthenticationService extends Service {
 					try {
 						Random generator = new Random();
 						boolean val = generator.nextBoolean();
-						iOnAuthenticationComplete.onAuthenticationComplete("user", val);
+						iOnAuthenticationComplete.onAuthenticationComplete("user");
 						Log.i(getClass().getSimpleName(), "Done!");
 						counter = 0;
 						//serviceHandler = null;

@@ -138,7 +138,7 @@ public class FaceDetector extends Activity {
 			// continue with authentication
 			if(iAuthService != null) {
 				try {
-					iAuthService.setAuthenticationResult(true);
+					iAuthService.setAuthenticationResult("FaceDetector:user");
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

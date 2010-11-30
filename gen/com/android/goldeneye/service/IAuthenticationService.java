@@ -65,8 +65,8 @@ return true;
 case TRANSACTION_setAuthenticationResult:
 {
 data.enforceInterface(DESCRIPTOR);
-boolean _arg0;
-_arg0 = (0!=data.readInt());
+java.lang.String _arg0;
+_arg0 = data.readString();
 int _result = this.setAuthenticationResult(_arg0);
 reply.writeNoException();
 reply.writeInt(_result);
@@ -126,14 +126,14 @@ _data.recycle();
 }
 return _result;
 }
-public int setAuthenticationResult(boolean aAuthenticationResult) throws android.os.RemoteException
+public int setAuthenticationResult(java.lang.String aUserName) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
 int _result;
 try {
 _data.writeInterfaceToken(DESCRIPTOR);
-_data.writeInt(((aAuthenticationResult)?(1):(0)));
+_data.writeString(aUserName);
 mRemote.transact(Stub.TRANSACTION_setAuthenticationResult, _data, _reply, 0);
 _reply.readException();
 _result = _reply.readInt();
@@ -151,5 +151,5 @@ static final int TRANSACTION_setAuthenticationResult = (android.os.IBinder.FIRST
 }
 public int startAuthentication(java.lang.String aUserName) throws android.os.RemoteException;
 public int setOnAuthentication(com.android.goldeneye.service.IAuthenticationCallback aOnAuthenticationComplete) throws android.os.RemoteException;
-public int setAuthenticationResult(boolean aAuthenticationResult) throws android.os.RemoteException;
+public int setAuthenticationResult(java.lang.String aUserName) throws android.os.RemoteException;
 }
